@@ -11,9 +11,9 @@ require 'fileutils'
 require 'tmpdir'
 
 PG_SDK_VERSION = '1.0.0'
-PG_SDK_URL = "https://github.com/AteequeJ/pg_ios_sdk/releases/download/v#{PG_SDK_VERSION}/PGPaymentSDK.xcframework.zip"
+PG_SDK_URL = "https://github.com/AteequeJ/pg_sdk_ios/releases/download/v#{PG_SDK_VERSION}/PGPaymentSDK.xcframework.zip"
 # `shasum -a 256 PGPaymentSDK.xcframework.zip` of the release asset.
-PG_SDK_SHA256 = 'REPLACE_WITH_RELEASE_ZIP_SHA256'
+PG_SDK_SHA256 = '68e0dbdefcf87bbbfa845088ce54df362b511b39bd983e3adbd217d5099dd9ee'
 
 frameworks_dir = File.join(__dir__, 'Frameworks')
 framework_path = File.join(frameworks_dir, 'PGPaymentSDK.xcframework')
