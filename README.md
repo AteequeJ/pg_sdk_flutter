@@ -6,16 +6,16 @@ with a typed success / pending / failure / cancelled result.
 It's a thin bridge. The Dart API calls the native SDKs, which present
 their own checkout UI and do all networking, storage and pinning:
 
-| Platform | Native SDK | Repo |
+| Platform | Native SDK | Where it comes from |
 |---|---|---|
-| Android | `com.pgsdk:paymentsdk` | `../pg_sdk_android` |
-| iOS | `PGPaymentSDK` (XCFramework) | `../pg_ios_sdk` |
+| Android | `io.github.ateequej:paymentsdk` | Maven Central |
+| iOS | `PGPaymentSDK` (XCFramework) | GitHub release, downloaded on `pod install` |
 
 ```
 lib/                 Dart API (PGCheckout, PGConfig, PGPaymentRequest, PGPaymentResult)
 android/             Kotlin bridge → PGPaymentSDK / PGPaymentContract
 ios/                 Swift bridge → PGCheckout; forwards callback URLs automatically
-scripts/sync_native.sh   builds both native SDKs for the plugin
+scripts/sync_native.sh   local dev only: builds both native SDKs from sibling repos
 example/             demo app running against an in-process mock gateway
 ```
 
@@ -23,41 +23,15 @@ example/             demo app running against an in-process mock gateway
 
 - Flutter 3.38+ (Dart 3.10+)
 - Android minSdk 24
-- iOS 15.0+; Xcode 16+ to build the native framework
-
-## Setup (local native SDKs)
-
-The native SDKs aren't published to a hosted repository yet, so build them
-locally first. Clone `pg_sdk_android` and `pg_ios_sdk` next to this repo, then run:
-
-```sh
-scripts/sync_native.sh          # both; or `android` / `ios`
-```
-
-This publishes the Android AAR to `~/.m2` (mavenLocal) and copies
-`PGPaymentSDK.xcframework` into `ios/Frameworks/`. Run it again whenever a
-native SDK changes.
+- iOS 15.0+
 
 ## Adding it to an app
 
-```yaml
-# pubspec.yaml
-dependencies:
-  pg_flutter_sdk:
-    path: ../pg_flutter_sdk     # or a git dependency
+```sh
+flutter pub add pg_flutter_sdk
 ```
 
-**Android.** Add the local Maven repo to `android/build.gradle.kts`:
-
-```kotlin
-allprojects {
-    repositories {
-        mavenLocal { content { includeGroup("com.pgsdk") } }
-        google()
-        mavenCentral()
-    }
-}
-```
+**Android.** Nothing extra; the native SDK resolves from Maven Central.
 
 **iOS.** Set `platform :ios, '15.0'` in `ios/Podfile`, then add to `Info.plist`:
 
@@ -144,7 +118,6 @@ See `../pg_ios_sdk/README.md` and `../pg_sdk_android/docs` for the full details.
 ## Example app
 
 ```sh
-scripts/sync_native.sh
 cd example && flutter run
 ```
 
@@ -160,11 +133,25 @@ production. Test values: card `4242 4242 4242 4242` succeeds; UPI ID
 flutter test      # Dart API, validation and result decoding (mocked channel)
 ```
 
-## Publishing (later)
+## Developing against local native SDKs
 
-1. Publish `com.pgsdk:paymentsdk` to a hosted Maven repo (e.g. GitHub Packages
-   or Maven Central). Then replace `mavenLocal` with it in
-   `android/build.gradle.kts` and in the README instructions.
-2. Host `PGPaymentSDK.xcframework` (a release zip or a CocoaPod) and point
-   `ios/pg_flutter_sdk.podspec` at it instead of `ios/Frameworks/`.
-3. Remove `publish_to: none`, then `flutter pub publish` (or ship as a private git dependency).
+Clone `pg_sdk_android` and `pg_ios_sdk` next to this repo, then run:
+
+```sh
+scripts/sync_native.sh          # both; or `android` / `ios`
+```
+
+This publishes the Android AAR to `~/.m2` (the example app checks `mavenLocal`
+first) and copies `PGPaymentSDK.xcframework` into `ios/Frameworks/`, which the
+podspec uses instead of downloading. Delete `ios/Frameworks/` to go back to the
+released framework.
+
+## Releasing
+
+1. Android: publish `io.github.ateequej:paymentsdk:<version>` to Maven Central
+   and bump the version in `android/build.gradle.kts`.
+2. iOS: zip the XCFramework (`ditto -c -k --keepParent PGPaymentSDK.xcframework PGPaymentSDK.xcframework.zip`),
+   attach it to a `pg_ios_sdk` GitHub release, and update `PG_SDK_VERSION` /
+   `PG_SDK_SHA256` in `ios/pg_flutter_sdk.podspec` (`shasum -a 256 <zip>`).
+3. Bump `version` in `pubspec.yaml` and the podspec, update `CHANGELOG.md`.
+4. `flutter pub publish --dry-run`, then `flutter pub publish`.

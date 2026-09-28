@@ -1,0 +1,22 @@
+# .pubignore replaces .gitignore for `flutter pub publish`, so repeat what matters.
+.dart_tool/
+build/
+/pubspec.lock
+.idea/
+.vscode/
+*.iml
+.DS_Store
+.env
+.env.*
+
+# Native binaries: downloaded at build time (iOS) or from Maven Central (Android).
+ios/Frameworks/
+
+# Local-dev tooling and example build output.
+scripts/
+example/build/
+example/.dart_tool/
+example/android/.gradle/
+example/android/.kotlin/
+example/android/local.properties
+example/ios/Pods/

@@ -1,9 +1,9 @@
 allprojects {
     repositories {
-        // pg_flutter_sdk's native Android SDK, published by
-        // ../scripts/sync_native.sh until it's on a hosted Maven repo.
+        // Lets the example build against a local pg_sdk_android published by
+        // ../scripts/sync_native.sh. Real apps resolve it from Maven Central.
         mavenLocal {
-            content { includeGroup("com.pgsdk") }
+            content { includeGroup("io.github.ateequej") }
         }
         google()
         mavenCentral()

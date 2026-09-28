@@ -16,12 +16,7 @@ buildscript {
 
 allprojects {
     repositories {
-        // The native SDK (com.pgsdk:paymentsdk) is published here by
-        // scripts/sync_native.sh until it's on a hosted Maven repo. Apps using
-        // this plugin must add the same repository — see README.
-        mavenLocal {
-            content { includeGroup("com.pgsdk") }
-        }
+        // The native SDK (io.github.ateequej:paymentsdk) is on Maven Central.
         google()
         mavenCentral()
     }
@@ -59,5 +54,5 @@ android {
 
 dependencies {
     // `api` so host apps can reference SDK types (e.g. PGDebugInterceptor) natively.
-    api("com.pgsdk:paymentsdk:1.0.0")
+    api("io.github.ateequej:paymentsdk:1.0.0")
 }

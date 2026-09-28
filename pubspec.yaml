@@ -1,8 +1,13 @@
 name: pg_flutter_sdk
 description: "Flutter plugin for the PG Payment SDK: UPI, card and net-banking checkout via the native iOS and Android SDKs."
 version: 0.1.0
-publish_to: none # depends on locally built native SDKs for now; see README
-homepage:
+homepage: https://github.com/AteequeJ/pg_sdk_flutter
+repository: https://github.com/AteequeJ/pg_sdk_flutter
+issue_tracker: https://github.com/AteequeJ/pg_sdk_flutter/issues
+topics:
+  - payments
+  - upi
+  - checkout
 
 environment:
   sdk: ^3.10.0

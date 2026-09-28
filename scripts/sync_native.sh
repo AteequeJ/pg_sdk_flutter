@@ -1,11 +1,11 @@
 #!/bin/sh
 #
-# Builds the native SDKs from their sibling repos and makes them available
-# to this plugin:
-#   - Android: publishes com.pgsdk:paymentsdk to the local Maven repo (~/.m2)
+# Local development only: builds the native SDKs from their sibling repos so
+# the plugin uses them instead of the released ones:
+#   - Android: publishes io.github.ateequej:paymentsdk to the local Maven repo (~/.m2)
 #   - iOS:     builds PGPaymentSDK.xcframework and copies it to ios/Frameworks
 #
-# Run after cloning, and again whenever either native SDK changes.
+# Releases don't depend on this (Maven Central + the podspec's pinned download).
 #
 # Usage: scripts/sync_native.sh [android|ios]   (default: both)
 # Env:   PG_ANDROID_SDK_DIR  (default: ../pg_sdk_android)
