@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - pg_flutter_sdk (0.1.0):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - pg_flutter_sdk (from `.symlinks/plugins/pg_flutter_sdk/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  pg_flutter_sdk:
+    :path: ".symlinks/plugins/pg_flutter_sdk/ios"
+
+SPEC CHECKSUMS:
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  pg_flutter_sdk: cd6b3e5ffc6a0dd6c0ed63e391800c30d32a3592
+
+PODFILE CHECKSUM: 53a6aebc29ccee84c41f92f409fc20cd4ca011f1
+
+COCOAPODS: 1.16.2
