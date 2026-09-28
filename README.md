@@ -113,7 +113,9 @@ The native SDKs' security model applies unchanged. In short:
 - Your backend creates orders with the secret key; the app only sees `orderToken`.
 - A success result is not proof of payment. Always verify server-side.
 
-See `../pg_ios_sdk/README.md` and `../pg_sdk_android/docs` for the full details.
+See the [iOS SDK README](https://github.com/AteequeJ/pg_sdk_ios/blob/main/README.md)
+and the [Android SDK docs](https://github.com/AteequeJ/pg_sdk_android/tree/main/docs)
+for the full details.
 
 ## Example app
 
@@ -151,7 +153,7 @@ released framework.
 1. Android: publish `io.github.ateequej:paymentsdk:<version>` to Maven Central
    and bump the version in `android/build.gradle.kts`.
 2. iOS: zip the XCFramework (`ditto -c -k --keepParent PGPaymentSDK.xcframework PGPaymentSDK.xcframework.zip`),
-   attach it to a `pg_ios_sdk` GitHub release, and update `PG_SDK_VERSION` /
+   attach it to a `pg_sdk_ios` GitHub release, and update `PG_SDK_VERSION` /
    `PG_SDK_SHA256` in `ios/pg_flutter_sdk.podspec` (`shasum -a 256 <zip>`).
 3. Bump `version` in `pubspec.yaml` and the podspec, update `CHANGELOG.md`.
 4. `flutter pub publish --dry-run`, then `flutter pub publish`.
