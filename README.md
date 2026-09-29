@@ -27,9 +27,50 @@ example/             demo app running against an in-process mock gateway
 
 ## Adding it to an app
 
+### Option A: from pub.dev (recommended)
+
 ```sh
 flutter pub add pg_flutter_sdk
 ```
+
+or in `pubspec.yaml`:
+
+```yaml
+dependencies:
+  pg_flutter_sdk: ^0.1.0
+```
+
+### Option B: from GitHub (unreleased changes)
+
+To use a branch, tag or commit that isn't on pub.dev yet:
+
+```yaml
+dependencies:
+  pg_flutter_sdk:
+    git:
+      url: https://github.com/AteequeJ/pg_sdk_flutter.git
+      ref: main            # or a tag / commit SHA
+```
+
+### Option C: from a local checkout (plugin development)
+
+```sh
+git clone https://github.com/AteequeJ/pg_sdk_flutter.git pg_flutter_sdk
+```
+
+```yaml
+dependencies:
+  pg_flutter_sdk:
+    path: ../pg_flutter_sdk
+```
+
+Changes to the plugin's Dart, Kotlin or Swift code show up on the next
+`flutter run`. With A, B and C alike, the native SDKs still come from Maven
+Central and the GitHub release. To build against local copies of the native
+SDKs too, see
+[Developing against local native SDKs](#developing-against-local-native-sdks).
+
+### Platform setup (all options)
 
 **Android.** Nothing extra; the native SDK resolves from Maven Central.
 
@@ -137,16 +178,33 @@ flutter test      # Dart API, validation and result decoding (mocked channel)
 
 ## Developing against local native SDKs
 
-Clone `pg_sdk_android` and `pg_ios_sdk` next to this repo, then run:
+Clone the native SDKs next to this repo. The script expects the folder names
+below, so pass them explicitly: the iOS repo is `pg_sdk_ios` on GitHub.
 
 ```sh
+cd ..
+git clone https://github.com/AteequeJ/pg_sdk_android.git pg_sdk_android
+git clone https://github.com/AteequeJ/pg_sdk_ios.git pg_ios_sdk
+cd pg_flutter_sdk
 scripts/sync_native.sh          # both; or `android` / `ios`
 ```
 
-This publishes the Android AAR to `~/.m2` (the example app checks `mavenLocal`
-first) and copies `PGPaymentSDK.xcframework` into `ios/Frameworks/`, which the
-podspec uses instead of downloading. Delete `ios/Frameworks/` to go back to the
-released framework.
+For other locations, set `PG_ANDROID_SDK_DIR` / `PG_IOS_SDK_DIR`. Building
+the iOS framework needs Xcode 16+.
+
+What the script does:
+
+- **Android.** It publishes the AAR to `~/.m2`. The example app checks
+  `mavenLocal` first. In your own app, add
+  `mavenLocal { content { includeGroup("io.github.ateequej") } }` above
+  `google()` in `android/build.gradle.kts` (`allprojects.repositories`), and
+  remove it before shipping.
+- **iOS.** It copies `PGPaymentSDK.xcframework` into `ios/Frameworks/`, which
+  the podspec uses instead of downloading. Run `pod install` again in the
+  app's `ios/` folder afterwards. Delete `ios/Frameworks/` to go back to the
+  released framework.
+
+Run the script again after each native SDK change.
 
 ## Releasing
 
